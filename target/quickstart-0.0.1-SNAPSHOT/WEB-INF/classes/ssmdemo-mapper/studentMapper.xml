@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.brian.coding.java.web.ssm.studentdemo.dao.StudentDao">
+	<select id="findById" resultType="net.brian.coding.java.web.ssm.studentdemo.domain.Student" parameterType="int">
+		select * from demo_ssm_student where id = #{id}
+	</select>
+	
+	<select id="find" resultType="net.brian.coding.java.web.ssm.studentdemo.domain.Student" >
+		select * from demo_ssm_student 
+	</select>
+	<insert id="doInsert" parameterType="net.brian.coding.java.web.ssm.studentdemo.domain.Student">
+		insert into demo_ssm_student(name,sex,age,memo) 
+		values(#{name},#{sex},#{age},#{memo})
+		
+	</insert>
+	<update id="doUpdate" parameterType="net.brian.coding.java.web.ssm.studentdemo.domain.Student">
+		update demo_ssm_student 
+		set name=#{name}, sex=#{sex},age=#{age},memo=#{memo}
+		where id =#{id}
+	</update>
+	<delete id="delById" parameterType="int">
+		delete from demo_ssm_student where id=#{id}
+	</delete>
+	
+</mapper>

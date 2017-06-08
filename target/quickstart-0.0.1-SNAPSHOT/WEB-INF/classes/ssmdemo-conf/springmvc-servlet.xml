@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"     
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:p="http://www.springframework.org/schema/p"     
+        xmlns:context="http://www.springframework.org/schema/context"   
+        xmlns:mvc="http://www.springframework.org/schema/mvc"  
+        xmlns:tx="http://www.springframework.org/schema/tx"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd   
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd   
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">   
+	<!-- 注释驱动 -->
+	<mvc:annotation-driven/>
+	<!-- 扫描component -->
+ 	<context:component-scan base-package="net.brian.coding.java.web.ssm.studentdemo"></context:component-scan>
+	<!-- viewResolver -->
+	<bean name="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<property name="prefix" value="/jsp/"/>
+		<property name ="suffix" value =".jsp"/>
+	</bean>
+
+	<!-- json数据 -->
+	<bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes" >
+			<list>
+			    <value>text/html;charset=UTF-8</value>
+				<value>application/json;chartset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	<!-- spring mvc 配置结束 -->
+
+	<!-- jdbc连接配置 -->
+	<bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+	   <property name="driverClassName" value ="com.mysql.jdbc.Driver" />   
+	   <property name="url" value="jdbc:mysql://127.0.0.1:3306/finalsql?useUnicode=true&amp;characterEncoding=UTF-8"/>            
+	   <property name="username" value="root"/> 
+	   <property name="password" value="bqy@Home2016"/>  
+ 	 </bean>  
+ 	<!-- sql会话工厂配置 -->	
+	 <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+	     <property name="dataSource" ref="jdbcDataSource" />  
+	     <property name="mapperLocations" value="classpath:ssmdemo-mapper/studentMapper.xml"></property>  
+	 </bean> 
+	  
+	<!-- Mybatis自动扫描映射接口 -->  
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描net.brian.coding.java.web.ssm.studentdemo.dao这个包以及它的子包下的所有映射接口类 -->
+        <property name="basePackage" value="net.brian.coding.java.web.ssm.studentdemo.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+	
+</beans>

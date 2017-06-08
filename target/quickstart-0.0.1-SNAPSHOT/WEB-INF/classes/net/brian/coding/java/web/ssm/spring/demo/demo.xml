@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/lang
+http://www.springframework.org/schema/lang/spring-lang.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<context:component-scan base-package="spring.demo">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+	</context:component-scan>
+
+	<!-- Implementation of BeanPostProcessor to customize logics after container's initiation. -->
+	<bean class="spring.demo.chapter05.ioc.custombeans.BeanPostProcessorDemo" />
+
+	<!-- Implementation of BeanPostProcessor to get data source before container's initiation. -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath:/spring/demo/chapter05/ioc/custombeans/jdbc.properties" />
+	</bean>
+	<bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource">
+		<!-- Can use jdbc.url defined in the properties file directly. -->
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	
+	<!-- ###### Initiating beans start ###### -->
+	<!-- factory-method will be executed during initiation. -->
+	<bean id="staticFactory" class="spring.demo.DefaultServiceLocator" factory-method="createStaticFactory" />
+	<!-- This approach shows that the factory bean itself can be managed and configured through dependency injection  -->
+	<!-- factory-method is not configured here, then we can have many beans declared with different many different factory-method.  -->
+	<!-- the factory bean, which contains a method called createAccountInstance() and createAccountInstance() -->
+	<bean id="instanceFactory" class="spring.demo.DefaultServiceLocator" >
+		<!-- inject any dependencies required by this locator bean -->
+	</bean>
+	<!-- the bean to be created via the factory bean start -->
+	<bean id="accountService" factory-bean="instanceFactory" factory-method="createAccountInstanceFactory" lazy-init="true" />
+	<bean id="clientService" factory-bean="instanceFactory" factory-method="createClientInstanceFactory" />
+	<!-- the bean to be created via the factory bean end -->
+	<!-- ###### Initiating beans end ###### -->
+	
+</beans>
