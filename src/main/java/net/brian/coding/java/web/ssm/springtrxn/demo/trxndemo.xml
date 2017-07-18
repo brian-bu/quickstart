@@ -1,35 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"     
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-       xmlns:p="http://www.springframework.org/schema/p"     
-        xmlns:context="http://www.springframework.org/schema/context"   
-        xmlns:mvc="http://www.springframework.org/schema/mvc"  
-        xmlns:tx="http://www.springframework.org/schema/tx"
-   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd   
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd   
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">  
-	<!--开启注解方式-->
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+	<!--开启注解方式 -->
 	<context:annotation-config />
+	<!-- 详见：http://www.cnblogs.com/newsouls/p/3988216.html -->
 	
-	<!-- 配置sessionFactory -->
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-	<property name="configLocation">
-	<value>classpath:config/hibernate.cfg.xml</value>
-	</property>
-	<property name="packagesToScan">
-	<list>
-	<value>com.entity</value>
-	</list>
-	</property>
+	<!-- Spring配置文件中关于事务配置总是由三个组成部分，分别是DataSource、TransactionManager和代理机制这三部分，无论哪种配置方式，公共部分都是相同的，一般变化的只是代理机制这部分 -->
+	<!-- 公共部分1：配置sessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="configLocation">
+			<value>classpath:config/hibernate.cfg.xml</value>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>com.entity</value>
+			</list>
+		</property>
 	</bean>
-	
-	<!-- 配置事务管理器 -->
-	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-	<property name="sessionFactory" ref="sessionFactory"></property>
+
+	<!-- 公共部分2：配置事务管理器 -->
+	<!-- TransactionManager会根据数据访问方式有所变化，比如：使用Hibernate进行数据访问时，TransactionManager的实现为HibernateTransactionManager。 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
-	
+	<!-- 第一种配置事务的方式 ，tx -->
+	<tx:advice id="txadvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="modify*" propagation="REQUIRED"
+				rollback-for="Exception" />
+			<tx:method name="del*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="*" propagation="REQUIRED" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut id="daoMethod" expression="execution(* com.dao.*.*(..))" />
+		<aop:advisor pointcut-ref="daoMethod" advice-ref="txadvice" />
+	</aop:config>
+	<!-- 第二种配置事务的方式 ，代理 -->
+	<bean id="transactionProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager" ref="transactionManager"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="add*">PROPAGATION_REQUIRED, -Exception</prop>
+				<prop key="modify*">PROPAGATION_REQUIRED, -Exception</prop>
+				<prop key="del*">PROPAGATION_REQUIRED, -Exception</prop>
+				<prop key="*">PROPAGATION_REQUIRED, readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="userDao" parent="transactionProxy">
+		<property name="target"> <!-- 用bean代替ref的方式 -->
+			<bean class="com.dao.UserDaoImpl">
+				<property name="sessionFactory" ref="sessionFactory"></property>
+			</bean>
+		</property>
+	</bean>
+	<!-- 第三种配置事务的方式，拦截器 (不常用) -->
+	<bean id="transactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="transactionManager"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="add*">PROPAGATION_REQUIRED, -Exception</prop>
+				<prop key="modify*">PROPAGATION_REQUIRED, -Exception</prop>
+				<prop key="del*">PROPAGATION_REQUIRED, -Exception</prop>
+				<prop key="*">PROPAGATION_REQUIRED, readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="proxyFactory"
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+			</list>
+		</property>
+		<property name="beanNames">
+			<list>
+				<value>*Dao</value>
+			</list>
+		</property>
+	</bean>
 	<!-- 第四种配置事务的方式，注解 -->
-	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<tx:annotation-driven transaction-manager="transactionManager" />
 </beans>

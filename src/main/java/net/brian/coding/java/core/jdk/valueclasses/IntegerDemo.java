@@ -3,10 +3,11 @@ package net.brian.coding.java.core.jdk.valueclasses;
 import org.junit.Test;
 /**
  * 
- * 包括对java的装箱拆箱的示例和IntegerCache常量池的示例
+ * 包括对java的装箱拆箱的示例和IntegerCache常量池的示例，Integer对象的缓存数组IntegerCache作为-128~127的常量池
  * int是32位(bit)或4个字节(byte)
- * Integer是一个对象，需要存储对象的元数据。但是int是一个原始类型的数据，所以占用的空间更少。
- *
+ * Integer是一个对象，需要存储对象的元数据。但是int是一个原始类型的数据，所以占用的空间更少
+ * Integer自动装箱时创建对象的方法是在编译期间自动调用valueOf，即：
+ * Integer a = 100;相当于Integer a = Integer.valueOf(100);
  */
 public class IntegerDemo {
 	// @Test

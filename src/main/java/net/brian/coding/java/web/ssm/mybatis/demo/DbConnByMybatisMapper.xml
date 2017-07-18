@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.brian.coding.java.web.ssm.mybatis.demo.DbConnByMybatisDao">
+	<select id="fetchOneSimpleRecord"
+		resultType="net.brian.coding.java.web.ssm.mybatis.demo.DbConnByMybatisBean">
+		SELECT * FROM demo_sqlart_teacher WHERE dname = ‘computer’
+		<if test="salary != null">
+			AND title like #{title}
+		</if>
+		<if test="author != null and author.name != null">
+			AND author_name like #{author.name}
+		</if>
+	</select>
+	<!-- 动态SQL解决办法：开始 -->
+	<!-- choose|when|otherwise组合，类似java的switch语句 -->
+	<select id="findActiveBlogLike" resultType="Blog">
+		SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+		<choose>
+			<when test="title != null">
+				AND title like #{title}
+			</when>
+			<when test="author != null and author.name != null">
+				AND author_name like #{author.name}
+			</when>
+			<otherwise>
+				AND featured = 1
+			</otherwise>
+		</choose>
+	</select>
+	<!-- where和if标签组合 -->
+	<select id="findActiveBlogLike" resultType="Blog">
+		SELECT * FROM BLOG
+		<where>
+			<if test="state != null">
+				state = #{state}
+			</if>
+			<if test="title != null">
+				AND title like #{title}
+			</if>
+			<if test="author != null and author.name != null">
+				AND author_name like #{author.name}
+			</if>
+		</where>
+	</select>
+	<!-- set标签用于update -->
+	<update id="updateAuthorIfNecessary">
+		update Author
+		<set>
+			<if test="username != null">username=#{username},</if>
+			<if test="password != null">password=#{password},</if>
+			<if test="email != null">email=#{email},</if>
+			<if test="bio != null">bio=#{bio}</if>
+		</set>
+		where id=#{id}
+	</update>
+	<!-- 动态SQL解决办法：结束 -->
+	<!-- 简单的resultMap使用 -->
+	<resultMap id="userResultMap" type="User">
+		<id property="id" column="user_id" />
+		<result property="username" column="user_name" />
+		<result property="password" column="hashed_password" />
+	</resultMap>
+	<select id="selectUsers" resultMap="userResultMap">
+		select user_id, user_name, hashed_password
+		from some_table
+		where id = #{id}
+	</select>
+</mapper>

@@ -6,8 +6,9 @@ import java.util.List;
 import net.sf.cglib.proxy.MethodProxy;
 
 /**
- * 代理链
- *
+ * 代理链:
+ * 所谓的链式代理，也就是说可以将多个代理通过一条链子串起来，一个一个的去执行
+ * 执行顺序取决于添加到链上的先后顺序
  */
 public class ProxyChain {
 

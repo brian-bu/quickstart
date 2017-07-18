@@ -230,6 +230,11 @@
 		    <artifactId>itextpdf</artifactId>
 		    <version>5.5.10</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcpkix-jdk15on</artifactId>
+		    <version>1.57</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

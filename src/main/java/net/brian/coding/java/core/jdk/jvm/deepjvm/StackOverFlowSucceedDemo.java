@@ -2,7 +2,7 @@ package net.brian.coding.java.core.jdk.jvm.deepjvm;
 
 public class StackOverFlowSucceedDemo {
 	public StackOverFlowSucceedDemo() {
-		mockConstructorFailed();
+		mockConstructorSucceed();
 	}
 	public StackOverFlowSucceedDemo mockConstructorFailed() {
 		// 无论什么原因产生构造器和构造器包含的方法之间的互相调用都会抛出StackOverFlowError
