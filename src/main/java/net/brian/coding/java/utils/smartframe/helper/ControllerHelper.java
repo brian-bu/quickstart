@@ -47,7 +47,7 @@ public final class ControllerHelper {
     }
 
     /**
-     * 获取 Handler
+     * 获取 RealizationHandler
      */
     public static Handler getHandler(String requestMethod, String requestPath) {
         Request request = new Request(requestMethod, requestPath);
