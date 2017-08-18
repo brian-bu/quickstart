@@ -25,6 +25,7 @@ import java.util.Map;
  * 对于JDBC的详细代码示例在JdbcConnectionByMysql给出
  * 
  * @see net.brian.coding.db.jdbc.JdbcConnectionByMysql
+ * {@linkplain http://www.tuicool.com/articles/vmMni2}
  *
  */
 public class StaticMethodsInsteadOfConstructors extends SuperClient {

@@ -1,4 +1,7 @@
-package net.brian.coding.designpatterns.abstractfactory;
+package net.brian.coding.designpatterns.abstractfactory.abstractway;
+
+import net.brian.coding.designpatterns.abstractfactory.interfaceway.IProductA;
+import net.brian.coding.designpatterns.abstractfactory.interfaceway.IProductB;
 
 public abstract class AbstractFactory {
 	abstract IProductA createProductA();

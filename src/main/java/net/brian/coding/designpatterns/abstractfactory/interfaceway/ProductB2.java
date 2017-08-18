@@ -1,4 +1,4 @@
-package net.brian.coding.designpatterns.abstractfactory;
+package net.brian.coding.designpatterns.abstractfactory.interfaceway;
 
 public class ProductB2 implements IProductB {
 	public ProductB2() {
