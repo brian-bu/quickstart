@@ -4,6 +4,8 @@ package net.brian.coding.java.core.jdk.keywords;
  * instanceof运算符前面操作数的编译时类型必须是如下3种情况：
  * 要么与后面的类相同，要么是后面的类的父类，要么是后面类的子类
  * 如果Math instanceof String这种，编译检查都过不去，直接报编译错误
+ * 
+ * instanceof的比较只有在两个类是否有同一个类加载器加载的前提下才有意义
  *
  */
 public class InstanceofDemo {

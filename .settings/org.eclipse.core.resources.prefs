@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
-encoding//src/main/java/net/brian/coding/algorithm/demo/sorting/SelectionSorting.java=UTF-8
+encoding//src/main/java/net/brian/coding/algorithm/crazyjavaimpl/SelectionSorting.java=UTF-8
+encoding//src/main/java/net/brian/coding/algorithm/lintcode/strings/LongestCommonPrefix.java=UTF-8
+encoding//src/main/java/net/brian/coding/algorithm/lintcode/strings/LongestCommonSubstring.java=UTF-8
 encoding//src/main/java/net/brian/coding/java/core/datastructure/ArraysDemo.java=UTF-8
 encoding//src/main/java/net/brian/coding/java/core/jdk/keywords/DifferSwitchAndIfelse.java=UTF-8
 encoding//src/main/java/net/brian/coding/java/utils/StreamUtil.java=UTF-8

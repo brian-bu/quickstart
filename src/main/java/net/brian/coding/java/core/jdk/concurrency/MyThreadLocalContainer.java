@@ -36,6 +36,7 @@ public class MyThreadLocalContainer {
  *
  */
 class MyThreadLocal<T> {
+	// 自己实现一个ThreadLocal的关键点1：首先要保证hashmap的线程安全，同时注意key-value的数据类型
 	private Map<Thread, T> container = Collections.synchronizedMap(new HashMap<Thread, T>());
 
 	public void set(T value) {
@@ -43,6 +44,8 @@ class MyThreadLocal<T> {
 	}
 
 	public T get() {
+		// 自己实现一个ThreadLocal的关键点2：要知道map里放的是什么，也即key-value对
+		// key是thread，value是线程对应的值，若为空则用initialValue方法返回一个默认值作为结果
 		Thread thread = Thread.currentThread();
 		T value = container.get(thread);
 		if (value == null && !container.containsKey(thread)) {
@@ -56,6 +59,7 @@ class MyThreadLocal<T> {
 		container.remove(Thread.currentThread());
 	}
 
+	// 自己实现一个ThreadLocal的关键点3：该方法返回值是ThreadLocalMap中的value，使用时由Client自己建一个内部类实现该方法
 	protected T initialValue() {
 		return null;
 	}

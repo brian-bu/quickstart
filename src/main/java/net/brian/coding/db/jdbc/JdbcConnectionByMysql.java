@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class JdbcConnectionByMysql {
 	private final String DBDRIVER = "com.mysql.jdbc.Driver";
-	private final String DBURL = "jdbc:mysql://localhost:3306/finalsql";
+	private final String DBURL = "jdbc:mysql://192.168.1.102:3306/bigdata";
 	private final String DBUSER = "root";
 	private final String DBPASSWORD = "bqy@Home2016";
 	// Connection is a service interface right here.

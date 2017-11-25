@@ -35,10 +35,7 @@ public class UnnecessaryObjects {
 	public static void main(String[] args) {
 		// String unnecessaryObject1 = "Hello world!"; This is enough.
 		String unnecessaryObject1 = new String("Hello world!");//DO NOT DO THIS!
-		// int is not big enough during calculation so we need long.
-		// But we should use long instead of Long during declaration.
-		// Autoboxing will low the performance.
-		// item49
+		// item49：这里使用包装类型会降低性能
 		Long unnecessaryObject2 = 0L;
 		for (long i = 0; i < Integer.MAX_VALUE; i++) {
 			unnecessaryObject2 += i;

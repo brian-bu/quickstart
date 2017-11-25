@@ -67,7 +67,7 @@ class Singleton2 {
 
 	private Singleton2() {
 	}
-
+	// 可以进一步优化，把synchronized放到方法体里面包装代码块，这样可以减小锁粒度
 	public static synchronized Singleton2 getInstance() {
 		if (instance == null) {
 			instance = new Singleton2();
@@ -89,6 +89,7 @@ class Singleton3 {
 }
 
 // 静态内部类方式，只有显示通过调用getInstance方法时，才会显示装载SingletonHolder类，从而实例化instance
+// 这一种是最好的办法，只有在需要的时候才创建对象，而且能够保证线程安全，还不需要加锁
 class Singleton4 {
 	private static class SingletonHolder {
 		private static final Singleton4 INSTANCE = new Singleton4();
@@ -110,7 +111,7 @@ enum Singleton5 {
 	}
 }
 
-// 双重校验锁方式
+// DCL双重校验锁方式。这种方式的问题在于：线程可能看到引用的当前值，但对象状态值却是失效的，这意味着线程可以看到对象处于无效或错误的状态。延迟初始化占位类模式可以做到比DCL更好，见：Singleton4
 class Singleton6 {
 	private volatile static Singleton6 singleton;
 

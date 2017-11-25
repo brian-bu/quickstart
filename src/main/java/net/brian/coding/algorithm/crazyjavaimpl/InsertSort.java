@@ -45,10 +45,12 @@ public class InsertSort
 			//（i-1索引之前的数据已经有序的，i-1索引处元素的值就是最大值）
 			if (data[i].compareTo(data[i - 1]) < 0)
 			{
+				// i是j的后一位元素
 				int j = i - 1;
-				//整体后移一格
+				// i位元素之前的所有元素整体后移一格，给i位元素让出位置
 				for ( ; j >= 0 && data[j].compareTo(tmp) > 0 ; j--)
 				{
+					// j的后一位得到了前一位的赋值，也即i位元素得到了j位元素的赋值，其余元素整体后移
 					data[j + 1] = data[j];
 				}
 				//最后将tmp的值插入合适位置

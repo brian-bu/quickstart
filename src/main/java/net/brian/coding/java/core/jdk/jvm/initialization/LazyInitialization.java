@@ -23,7 +23,7 @@ public class LazyInitialization {
 		@SuppressWarnings("unused")
 		private final FieldType field1 = computeFieldValue();
 
-		// 实例域的延迟初始化
+		// 实例域的延迟初始化，类似Singleton的懒汉模式
 		private FieldType field2;
 
 		synchronized FieldType getField2() {
@@ -42,7 +42,7 @@ public class LazyInitialization {
 			return FieldHolder.field;
 		}
 
-		// 实例域延迟初始化之双重检查模式：Double-check idiom
+		// 实例域延迟初始化之双重检查模式：Double-check idiom，和Singleton中的DCL是一样的
 		private volatile FieldType field4;
 
 		FieldType getField4() {

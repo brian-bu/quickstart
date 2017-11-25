@@ -95,6 +95,8 @@ public class MathematicsDemo {
 		hashSet.add(decimal2);
 		treeSet.add(decimal1);
 		treeSet.add(decimal2);
+		System.out.println("Output the value of decimal1:: " + decimal1);//2
+		System.out.println("Output the value of decimal2:: " + decimal2);//2
 		System.out.println("Output the size of HashSet:: " + hashSet.size());//2
 		System.out.println("Output the size of TreeSet:: " + treeSet.size());//1
 	}

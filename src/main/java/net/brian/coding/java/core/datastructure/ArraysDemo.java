@@ -1,9 +1,10 @@
 package net.brian.coding.java.core.datastructure;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Ignore;
-import org.junit.Test;
 /**
  * 
  * 数组的初始化分为静态初始化和动态初始化
@@ -86,7 +87,22 @@ public class ArraysDemo {
 //		if((null == srcPos) || (null == destPos) || (null == length))
 //	}
 	public static void main(String[] args) {
-		ArraysDemo demo = new ArraysDemo();
-		demo.testSystemArrayCopy();
+//		ArraysDemo demo = new ArraysDemo();
+//		demo.testSystemArrayCopy();
+		List<String> list = Arrays.asList("a", "b", "c", "a", "b", "c");
+//		Iterator<String> it = list.iterator();
+		//FIXME: java.lang.UnsupportedOperationException
+//		while(it.hasNext()) {
+//			if("b".equals(it.next())) {
+//				it.remove();
+//			}
+//		}
+		list = new ArrayList<String>(list);
+		for(int i = 0; i < list.size(); i++) {
+			if("b".equals(list.get(i))) {
+				list.remove(i);
+			}
+		}
+		System.out.println(list.toString());
 	}
 }

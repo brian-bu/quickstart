@@ -4,54 +4,84 @@ package net.brian.coding.java.core.jdk.jvm.initialization;
  * Java中赋值顺序： 
  * 1. 父类的静态变量赋值
  * 2. 自身的静态变量赋值 
+ * =====分割线=====
  * 3. 父类成员变量赋值 
  * 4. 父类块赋值 
  * 5. 父类构造函数赋值 
+ * =====分割线=====
  * 6. 自身成员变量赋值 
  * 7. 自身块赋值 
  * 8. 自身构造函数赋值
  * 
- * 类的初始化会从祖先类到子类、按出现顺序，对类变量的初始化语句、静态初始化语句块依次进行初始化
- * 而对类实例的初始化也类似，会从祖先类到子类、按出现顺序，对类成员的初始化语句、实例初始化块、构造方法依次进行初始化
- * 本例包含上述所有的情况并展示了每一个部分在初始化中的顺序：
- * (1).首先T类被加载、连接后进行初始化，会先对字段k、t1、t2、i、n以及static块进行初始化。
- * (2).t1实例的初始化会初始化实例成员j，(实际上先进行父类实例内容的初始化)先调用静态方法print，并执行实例初始化块{}，输出： 1: j i=0
- * n= 0(i和n都还没有初始化) 2:构造块 i=1 n=1 (3)随后调用t1实例的构造函数，输出： 3:t1 i=2 n=2
- * (4).类似有t2实例的初始化： 4: j i=3 n= 3 5:构造块 i=4 n=4 6:t2 i=5 n=5 (5).i的初始化： 7.i i=6
- * n=6 (6).n的初始化和静态块的初始化： 8.静态块 i=7 n=99(n已经被初始化) (7).t实例的初始化： 9.j i=8 n= 100
- * 10.构造块 i=9 n= 101 11.init i=10 n= 102
  *
  */
-public class InitializationSequence implements Cloneable {
-	public static int k = 0;
-	public static InitializationSequence t1 = new InitializationSequence("t1");
-	public static InitializationSequence t2 = new InitializationSequence("t2");
-	public static int i = print("i");
-	public static int n = 99;
-
-	public int j = print("j");
-	{
-		print("构造块");
-	}
-
+public class InitializationSequence extends A {
+	/**
+	 * 如果没有这行new InitializationSequence();的代码则按照Java中赋值顺序应该有如下输出
+	 * A static
+	 * InitializationSequence static
+	 * 先对两个类进行静态初始化，这个过程需要jvm对两个类进行类加载，首先会先把静态成员load进去
+	 * A instantiated
+	 * A constructor.
+	 * 然后加载父类的所有信息，先是实例化块，然后是构造器，构造器是最后一步，这一步做完这个类和对象就可用了
+	 * InitializationSequence instantiated
+	 * InitializationSequence constructor
+	 * 最后是子类的加载
+	 * 
+	 * 注意在main方法中无论是InitializationSequence t = new InitializationSequence();还是直接new InitializationSequence();
+	 * 其结果都是一样的，也就是说，即便没有声明t而只是单纯的调用构造器，非静态初始化块照样会被执行
+	 */
+	/**
+	 * 如果有这行new InitializationSequence();的代码则按照Java中赋值顺序应该有如下输出
+	 * A static
+	 * 先对静态块初始化，初始化完A的时候初始化public static InitializationSequence t1 = new InitializationSequence();
+	 * 发现需要new InitializationSequence()，构造子类的构造器，需要按照顺序分别执行父类的实例化、构造器、子类的实例化、构造器。
+	 * 因此有如下四行结果输出：
+	 * A instantiated
+	 * A constructor
+	 * InitializationSequence instantiated
+	 * InitializationSequence constructor
+	 * 静态初始化public static InitializationSequence t1 = new InitializationSequence();结束，接下来静态初始化静态代码块
+	 * InitializationSequence static
+	 * 静态初始化静态代码块
+	 * A instantiated
+	 * A constructor
+	 * InitializationSequence instantiated
+	 * InitializationSequence constructor
+	 * 再次按照顺序分别执行父类的实例化、构造器、子类的实例化、构造器。
+	 */
+	 public static InitializationSequence t1 = new InitializationSequence();
+	
+	/**
+	 * 这行代码导致递归调用，不要这样写
+	 */
+	// public InitializationSequence t2 = new InitializationSequence();
 	static {
-		print("静态块");
+		System.out.println("InitializationSequence static");
+	}
+	{
+		System.out.println("InitializationSequence instantiated");
 	}
 
-	public InitializationSequence(String str) {
-		System.out.println((++k) + ":" + str + " i=" + i + " n=" + n);
-		++n;
-		++i;
-	}
-
-	public static int print(String str) {
-		System.out.println((++k) + ":" + str + " i=" + i + " n=" + n);
-		++n;
-		return ++i;
+	public InitializationSequence() {
+		System.out.println("InitializationSequence constructor");
 	}
 
 	public static void main(String[] args) {
-		@SuppressWarnings("unused")
-		InitializationSequence t = new InitializationSequence("init");
+		new InitializationSequence();
 	}
+}
+
+class A {
+	public A() {
+		System.out.println("A constructor");
+	}
+
+	{
+		System.out.println("A instantiated");
+	}
+	static {
+		System.out.println("A static");
+	}
+
 }

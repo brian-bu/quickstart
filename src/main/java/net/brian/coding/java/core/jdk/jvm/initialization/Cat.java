@@ -4,10 +4,6 @@ import java.io.Serializable;
 
 /**
  * 
- * 实例变量初始化的三种方式和先后顺序
- * 
- * 此外:
- * 
  * Effective Java 2th by Joshua Bloch
  * 
  * item13: Minimize the accessibility of classes and members
@@ -43,19 +39,6 @@ public class Cat implements Serializable
 		this.age = age;
 		this.eyeNum = eyeNum;
 	}
-	public Cat() {
-		System.out.println("Default constructor.");
-	}
-	{
-		System.out.println("执行非静态初始化块");
-		// 初始化Point 1：首先会先加载所有实例变量的声明语句，比如double weight；
-		// 然后按照代码块和定义时的赋值语句在代码出现的先后顺序进行赋值
-		// 这里的非静态初始化块先于Point2出现，因此先执行
-		weight = 2.0;
-	}
-	// 初始化Point 2：虽然直到这里才定义weight，但是之前的非静态初始化块并不属于非法引用
-	// 按照代码出现的顺序Point1先执行，所以已经赋值2.0，这里赋值2.3是覆盖了之前的赋值
-	double weight = 2.3;
 	// 序列化Point 5: 序列化前保留这个方法，序列化把该类实例保存到磁盘之后注释掉这个方法
 	// 再进行反序列化取出这个对象的时候，看看还能否通过反序列化重新构建Cat的实例
 //	@Override
@@ -64,4 +47,6 @@ public class Cat implements Serializable
 //		return "Cat[name=" + name
 //			+ ",age=" + age + ",weigth=" + weight + "]";
 //	}
+	public Cat() {
+	}
 }

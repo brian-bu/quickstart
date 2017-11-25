@@ -1,6 +1,10 @@
 package net.brian.coding.java.core.jdk.concurrency.utilities.synchronizer;
-import java.util.concurrent.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 /**
  * 
  * CountDownLatch的典型用法是将一个程序分为n个互相独立的可解决任务
